@@ -5,7 +5,6 @@ const moment = require('moment');
 const currentConditions = document.querySelector('.current-conditions');
 const forecast = document.querySelector('.forecast');
 
-
 function getGeoLocation() {
   if (navigator.geolocation) {
     console.log('supported');
@@ -16,36 +15,23 @@ function getGeoLocation() {
 }
 
 function onSuccess(position) {
-  //get current position
-  // console.log(position)
   const { latitude, longitude } = position.coords;
-  console.log(`latitude is ${latitude}. longitude is ${longitude}`)
-
-  // const url = `https://www.latlong.net/c/?lat=${latitude}&long=${longitude}`;
   getCurrentConditions(latitude, longitude);
   getForecast(latitude, longitude)
-
 }
 
 function onError(error) {
   console.log(error)
 }
 
-getGeoLocation();
+window.addEventListener('load', getGeoLocation);
 
 function getCurrentConditions(lat, lon) {
-  console.log(`${lat} lat is here`);
   fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=aa2086bc33ed267f712b7dce08282e66`)
     .then(response => {
-      // console.log(response);
       response.json().then(data => {
-        // console.log(data);
-        // console.log(data.weather);
-        // console.log(data.weather[0]);
-        // console.log(data.main);
         let mainTemp = data.main;
         let aveTemp = Math.floor(mainTemp.temp - 273.15);
-        // console.log(Math.floor(mainTemp.temp - 273.15));
         let weather = data.weather[0];
         createCurrentConditions(weather.icon, aveTemp, weather.description);
       })
@@ -64,7 +50,6 @@ function createCurrentConditions(icon, aveTemp, condition) {
 }
 
 function getForecast(lat, lon) {
-  console.log(`${lon} is forecast`);
   fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=aa2086bc33ed267f712b7dce08282e66`)
     .then(response => {
       response.json().then(data =>
@@ -76,28 +61,9 @@ function getForecast(lat, lon) {
           third: data.slice(16, 24),
           forth: data.slice(24, 32),
           fifth: data.slice(32, data.length)
-
         }
-        console.log(obj)
         createForecast(obj)
       })
-
-
-      // response.json().then(data => {
-      //   // console.log(data);
-      //   console.log(data.list);
-
-      //   console.log(data.list[6].dt_txt);
-      //   let ts = data.list[6].dt_txt;
-      //   ts = new Date();
-      //   console.log(ts.toDateString());
-      //   // console.log(data.list[6].weather[0]);
-      //   // console.log(data.list[6].weather[0].description);
-      //   // console.log(data.list[6].weather[0].icon);
-
-      //   // console.log(data.list[14]);
-      //   createForecast(data.list[6].weather[0].description, data.list[6].weather[0].icon);
-      // })
     })
 }
 
@@ -105,9 +71,6 @@ function createForecast(data) {
   for (const value in data) {
     let max = Math.max.apply(Math, data[value].map(item => item.main.temp)) - 273.15;
     let min = Math.min.apply(Math, data[value].map(item => item.main.temp)) - 273.15;
-    console.log(moment(data[value][4].dt_txt).format('dddd'))
-    // console.log(data[value][4].weather[0].description);
-    // console.log(data[value][4].weather[0].icon)
     forecast.insertAdjacentHTML('beforeend',
     `<div class="day">
     <h3>${moment(data[value][4].dt_txt).format('dddd')}</h3>
