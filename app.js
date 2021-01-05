@@ -69,8 +69,8 @@ function getForecast(lat, lon) {
 
 function createForecast(data) {
   for (const value in data) {
-    let max = Math.max.apply(Math, data[value].map(item => item.main.temp)) - 273.15;
-    let min = Math.min.apply(Math, data[value].map(item => item.main.temp)) - 273.15;
+    let max = Math.max.apply(Math, data[value].map(item => item.main.temp_max)) - 273.15;
+    let min = Math.min.apply(Math, data[value].map(item => item.main.temp_min)) - 273.15;
     forecast.insertAdjacentHTML('beforeend',
     `<div class="day">
     <h3>${moment(data[value][4].dt_txt).format('dddd')}</h3>
