@@ -1,6 +1,8 @@
 # weather
 https://chows-weather.surge.sh/
 
+A weather widget that get geolocation API to determine the user's location and show the current weather.
+
 :wave:
 **parcel index.html**
 Runs the app in the development mode.
